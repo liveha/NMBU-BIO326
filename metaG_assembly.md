@@ -5,9 +5,9 @@ The metagenome has been sequences with both ONT minION (long-reads) and with Ill
 
 Compared to the Salmon gut microbe, this ONT sequencing only ran for 6 hours on the MinION. Since this DNA is from a more complex microbial community (we expect between 10 and 20 bugs to be present) the number of sequences per microbe, will be lower, meaning _the sequencing coverage is lower_. However, due to the complexity, this assembly job will take longer time to finish.
 
-This session will be slightly different than the previouse dry-lab sessions. We will only start one job (the assembly), but since you have ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms.
+This session will be slightly different than the previous dry-lab sessions. We will only start one job (the assembly), but since you ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms.
 
-**IMPORTANTLY, you will NOT run this job interactivly with `srun`. Instead, you will have to generate a bash job script that you submit via `sbatch`** 
+**IMPORTANTLY, you will NOT run this job interactively with `srun`. Instead, you will have to generate a bash job script that you submit via `sbatch`** 
 
 _Why?_ 
 Well, interactive jobs are good to test your system and check or troubleshoot your script. But what if you are running a job that will take hours, days or even weeks to complete (which is often the case in genome/metagenome sequencing)? For larger computations in Orion, you have to submit the job script into the queue. You can read more about interactive vs bash job scripts here (sigma is another HPC, very similar to Orion): https://documentation.sigma2.no/jobs/submitting.html
@@ -56,12 +56,12 @@ You will generate your own assembly script in the **Assembly** section.
 Remember that you can always:
 * Check where you are (pathway directory) by typing `pwd`
 * List content in your directory by typing `ls` and `ls -l`
-* Change your directory usind `cd` , e.g. `cd /path/to/where/I/wanna/go/`
+* Change your directory using `cd` , e.g. `cd /path/to/where/I/wanna/go/`
 * Copy files using `cp`, e.g. `cp /path/to/myfile.fastq /path/to/new/directory/` or if you are in the directory you want to move the file to, simply `cp /path/to/file/myfile.fastq .` 
 
 ## Obtain the fastq files 
 
-The minKNOW software will by default aliquote and store the fast5 and subsequently the basecalled fastq sequences in chuncks of mulitple sequences based on total size. *These fastq files have already been concatinated to one file using `cat`. The sequences in the concatinated fastq file has then been filtered using `Filtlong`*    
+The minKNOW software will by default aliquot and store the fast5 and subsequently the basecalled fastq sequences in chunks of multiple sequences based on total size. *These fastq files have already been concatenated to one file using `cat`. The sequences in the concatenated fastq file has then been filtered using `Filtlong`*    
 
 _In brief_: You should make a directory for this metagenome-assembly session and copy the fastq file available here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz` to your newly generated directory. 
 No prob, all done? Great, move to **Assembly**
@@ -82,7 +82,7 @@ mkdir MetaGenomeAssemblyBio326
 ```
 
 Enter this directory (`cd MetaGenomeAssemblyBio326`) 
-and copy the trimmed and concatinated fastq files to your newly generated directory: 
+and copy the trimmed and concatenated fastq files to your newly generated directory: 
 
 ```
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz .
@@ -109,12 +109,12 @@ https://canu.readthedocs.io/en/latest/quick-start.html
 
 I will now give you two choices:
 
-1) **Build your own bash job script** based on the documentation you just read, and the previouse sessions with Arturo. Think: What kind of data do I have? What kind of information would I want in my outputs? What parameters i are reccomended (metagenome, ONT, slightly shallow sequencing coverage etc.)?
+1) **Build your own bash job script** based on the documentation you just read, and the previous sessions with Arturo. Think: What kind of data do I have? What kind of information would I want in my outputs? What parameters i are recommended (metagenome, ONT, slightly shallow sequencing coverage etc.)?
 
 2) Jump to the section below, **Assembly using pre-made bash script as template**
 
-If you feel confident in what we have done until now, I would strongly andvise you to try on your own first (option 1). For some of you, this will be easypeasy (and you could even try to assemble using Flye for the comparison: https://github.com/fenderglass/Flye/blob/flye/docs/USAGE.md)  
-If this course is the first time you are working with HPC and slurm files, and everything is greek, option 2 is completely OK. 
+If you feel confident in what we have done until now, I would strongly advise you to try on your own first (option 1). For some of you, this will be easypeasy (and you could even try to assemble using Flye for the comparison: https://github.com/fenderglass/Flye/blob/flye/docs/USAGE.md)  
+If this course is the first time you are working with HPC and slurm files, and everything is Greek, option 2 is completely OK. 
 
 
 ### Assembly using pre-made bash script as template
@@ -160,20 +160,20 @@ or, _Option B_
 cp  /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/metagenome_canu.SLURM.sh .
 ```
 
-## SUBMIT YOUR JOB FILE
+## Submit your job file
 
 Start your job: 
 ```
 sbatch metagenome_canu.SLURM.sh
 ```
 
-Check your job; is it runnning? 
+Check your job; is it running? 
 
 ```
 squeue -u youruserID
 ```
 
-Once running, the assembly will take approx 24 hours to finish. We will continue with polishing of the contigs on friday, and hopefully we get some nice circular genomes!!
+Once running, the assembly will take approx. 24 hours to finish. We will continue with polishing of the contigs on Friday, and hopefully we get some nice circular genomes!!
 
 
 
