@@ -15,7 +15,7 @@ Remember that you can always:
 
 ## Obtain the fastq files 
 
-The minKNOW software will by default aliquote and store the fast5 and subsequently the basecalled fastq sequences in chuncks of mulitple sequences based on total size. *These fastq files have already been concatinated to one file using `cat`. The sequences in the concatinated fastq file has then then been filtered using `Filtlong`*    
+The minKNOW software will by default aliquote and store the fast5 and subsequently the basecalled fastq sequences in chuncks of mulitple sequences based on total size. *These fastq files have already been concatinated to one file using `cat`. The sequences in the concatinated fastq file has then been filtered using `Filtlong`*    
 
 _In brief_: you should make a directory for this metagenome-assembly session and copy the fastq file available here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz` to your newly generated directory. 
 No prob, all done? Great, move to **Assembly**
@@ -51,7 +51,7 @@ A good practice (especially when newbie) is to check that you have all directori
 
 ## Assembly
 
-And now, time to start your assembly using CANU (again)! Luckily for us, canu is already available as a module in Orion (but this is often not the case). 
+And now, time to start your assembly using CANU (again)! Luckily for us, canu is already available as a module in Orion. But this is often not the reality, and you usually have to make your own slurm files. 
 
 When you search for a software, you will often find documentation like this: 
 https://canu.readthedocs.io/en/latest/quick-start.html
