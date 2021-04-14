@@ -7,7 +7,7 @@ Compared to the Salmon gut microbe, this ONT sequencing only ran for 6 hours on 
 
 This session will be slightly different than the previouse dry-lab sessions. We will only start one job (the assembly), but since you have ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms.
 
-**IMPORTANTLY, you will NOT run this job interactivly with `srun`. Instead, you will have to generate a bash job script that you submit via `sbatch`.** This is the reality in most cases when working with genome sequences. 
+**IMPORTANTLY, you will NOT run this job interactivly with `srun`. Instead, you will have to generate a bash job script that you submit via `sbatch`** 
 
 _Why?_ 
 Well, interactive jobs are good to test your system and check or troubleshoot your script. But what if you are running a job that will take hours, days or even weeks to complete (which is often the case in genome/metagenome sequencing)? For larger computations in Orion, you have to submit the job script into the queue. You can read more about interactive vs bash job scripts here (sigma is another HPC, very similar to Orion): https://documentation.sigma2.no/jobs/submitting.html
@@ -49,7 +49,7 @@ bwa mem -t $SLURM_TASKS_PER_NODE genome.fa reads.fastq | samtools sort -o output
 echo "This is my example script. Hello world!"
 ```
 
-Once created, you will have to save your script and sumbit the job via `sbatch myjob.sh`
+Once created, you will have to save your script and submit the job via `sbatch myjob.sh`
 
 You will generate your own assembly script in the **Assembly** section. 
 
@@ -94,7 +94,7 @@ you should also make a result directory for your generated assembly files
 ```
 mkdir MetaG_Assembly.dir
 ```
-**TIPS2**: `cd` into the new directory and type `pwd` now! This is your `$outpath`
+**TIPS2**: `cd` to the new directory and type `pwd` now! This is your `$outpath`
 
 A good practice (especially when newbie) is to check that you have all directories and files in place before you run a job. Unsure what you have or where you are? Type `ls` or `pwd` to have a look! _Mucho disoriented? Find paper and pen and draw your directories!_
 
@@ -138,8 +138,7 @@ _Option A_ :
 #SBATCH --partition=smallmem # smallmem 1-100 GB RAM, hugemem > 100 GB.
 
 #Load your modules:
-module --quiet purge  #Reset the modules to the system default
-module load canu/1.9-GCCcore-8.3.0-Java-11  #load canu module
+module load canu #load canu module
 
 #CHANGE THESE PATHS:
 inpath='/PATH/TO/MY_FASTQ'          #This is the directory where your fastq files are located, see TIPS1
