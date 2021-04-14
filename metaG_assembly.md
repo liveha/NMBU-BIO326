@@ -3,22 +3,24 @@
 In this session, we will **start an assembly of a metagenome** from a human gut sample (enrichment). 
 The metagenome has been sequences with both ONT minION (long-reads) and with Illumina HiSeq (short reads). In this course, we will assemble the long reads using CANU as we did for the microbe from the salmon gut, followed by polishing the contigs using the short reads. We will use BUSCO to compare the quality of the circular contigs before and after polishing using the short reads (Friday), before we bin the contigs to Metagenome-Assembled Genomes (MAGs) and annotate the MAGs (next week). 
 
-Compared to the Salmon gut microbe, this ONT sequencing only ran for 6 hours on the MinION. Since this DNA is from a more complex microbial community (we expect between 10 and 20 bugs to be present) the number of sequences per microbe, will be lower, meaning _the sequencing coverage is lower_. Your sequence coverage is always something to keep in mind when analysing your data. However, the sequneced microbome is complex and the assembly will take longer time to finish.
+Compared to the Salmon gut microbe, this ONT sequencing only ran for 6 hours on the MinION. Since this DNA is from a more complex microbial community (we expect between 10 and 20 bugs to be present) the number of sequences per microbe, will be lower, meaning _the sequencing coverage is lower_. However, due to the complexity, this assembly job will take longer time to finish.
 
-This session will be slightly different than the previouse dry-lab sessions. We will only start one job (assembly), but since you have ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms. **IMPORTANTLY, you will NOT run this job interactivly with ´srun´. Instead, you will have to generate a bash job script that you submit via ´sbatch´.**
+This session will be slightly different than the previouse dry-lab sessions. We will only start one job (the assembly), but since you have ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms.
+
+**IMPORTANTLY, you will NOT run this job interactivly with ´srun´. Instead, you will have to generate a bash job script that you submit via ´sbatch´.** This is the reality in most cases when working with genome sequences. 
 
 _Why?_ 
-Well, interactive jobs are good to test your system and check or troubleshoot your bash script. But what if you are running scripts that will take hours, days or even weeks to complete? For larger computations, you have to submit the job script into the queue. You can read more about interactive vs job scrip here (sigma is an other HPC, similar to Orion): https://documentation.sigma2.no/jobs/submitting.html
+Well, interactive jobs are good to test your system and check or troubleshoot your script. But what if you are running a job that will take hours, days or even weeks to complete (which is often the case in genome/metagenome sequencing)? For larger computations in Orion, you have to submit the job script into the queue. You can read more about interactive vs bash job scripts here (sigma is another HPC, very similar to Orion): https://documentation.sigma2.no/jobs/submitting.html
 
 ## How to make a job script that you submit using `sbatch`
 
-To make a job script, you first have to generate a **myjob.sh** file. This can be done via `vi`, `vim` or `nano`. E.g. 
+To make a job script, you first have to generate a **myjob.sh** file. This can be done via `vi`, `vim` or `nano`. If you are new to text editors, this page might be helpfull https://www.linux.com/topic/desktop/introduction-text-editors-get-know-nano-and-vim/  (NB: my favorite is vi, but nano is considered most intuitive) 
 
 ```
 vi myjob.sh
 ```
 
-This will generate a text file where you can start creating your bash job script. If you are new to text editors, this page might be helpfull https://www.linux.com/topic/desktop/introduction-text-editors-get-know-nano-and-vim/  (NB: nano is considered most intuitive)
+This will generate a text file where you can start creating your bash job script. 
 
 A basic **bash job script** will look something like this: 
 
@@ -162,7 +164,7 @@ Start your job:
 sbatch metagenome_canu.SLURM.sh
 ```
 
-Check your slurm job - is it runnning? 
+Check your job; is it runnning? 
 
 ```
 squeue -u youruserID
