@@ -7,7 +7,7 @@ Compared to the Salmon gut microbe, this ONT sequencing only ran for 6 hours on 
 
 This session will be slightly different than the previouse dry-lab sessions. We will only start one job (the assembly), but since you have ran an assembly using canu before, you are encouraged to try a tiny bit more on your own this time. A copy-paste option is available if you scroll, and we are available for questions and breakout rooms.
 
-**IMPORTANTLY, you will NOT run this job interactivly with ´srun´. Instead, you will have to generate a bash job script that you submit via ´sbatch´.** This is the reality in most cases when working with genome sequences. 
+**IMPORTANTLY, you will NOT run this job interactivly with `srun`. Instead, you will have to generate a bash job script that you submit via `sbatch`.** This is the reality in most cases when working with genome sequences. 
 
 _Why?_ 
 Well, interactive jobs are good to test your system and check or troubleshoot your script. But what if you are running a job that will take hours, days or even weeks to complete (which is often the case in genome/metagenome sequencing)? For larger computations in Orion, you have to submit the job script into the queue. You can read more about interactive vs bash job scripts here (sigma is another HPC, very similar to Orion): https://documentation.sigma2.no/jobs/submitting.html
@@ -57,13 +57,13 @@ Remember that you can always:
 * Check where you are (pathway directory) by typing `pwd`
 * List content in your directory by typing `ls` and `ls -l`
 * Change your directory usind `cd` , e.g. `cd /path/to/where/I/wanna/go/`
-* copy files using `cp`, e.g. `cp /path/to/myfile.fastq /path/to/new/directory/` or if you are in the directory you want to move the file to, simply `cp /path/to/file/myfile.fastq .` 
+* Copy files using `cp`, e.g. `cp /path/to/myfile.fastq /path/to/new/directory/` or if you are in the directory you want to move the file to, simply `cp /path/to/file/myfile.fastq .` 
 
 ## Obtain the fastq files 
 
 The minKNOW software will by default aliquote and store the fast5 and subsequently the basecalled fastq sequences in chuncks of mulitple sequences based on total size. *These fastq files have already been concatinated to one file using `cat`. The sequences in the concatinated fastq file has then been filtered using `Filtlong`*    
 
-_In brief_: you should make a directory for this metagenome-assembly session and copy the fastq file available here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz` to your newly generated directory. 
+_In brief_: You should make a directory for this metagenome-assembly session and copy the fastq file available here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz` to your newly generated directory. 
 No prob, all done? Great, move to **Assembly**
 
 
@@ -87,16 +87,16 @@ and copy the trimmed and concatinated fastq files to your newly generated direct
 ```
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/GutMetagenome_filtered_rawReads.fastq.gz .
 ```
-TIPS1: Type `pwd` now! This is your `$inpath´
+**TIPS1**: Type `pwd` now! This is your `$inpath`
 
 you should also make a result directory for your generated assembly files
 
 ```
 mkdir MetaG_Assembly.dir
 ```
-TIPS2: Type `pwd` now! This is your `$outpath´
+**TIPS2**: `cd` into the new directory and type `pwd` now! This is your `$outpath`
 
-A good practice (especially when newbie) is to check that you have all directories and files in place before you run a job. Unsure what you have or where you are? Type `ls` or `pwd` to have a look! 
+A good practice (especially when newbie) is to check that you have all directories and files in place before you run a job. Unsure what you have or where you are? Type `ls` or `pwd` to have a look! _Mucho disoriented? Find paper and pen and draw your directories!_
 
 ## Assembly
 
@@ -105,11 +105,11 @@ And now, time to start your assembly using CANU (again)! Luckily for us, canu is
 When you search for a software, you will often find documentation like this: 
 https://canu.readthedocs.io/en/latest/quick-start.html
 
-**Before you continue, I would like you to use a some minutes to look at the documentation** and reflect on how you could get started if you want to assemble a genome or a metagenome in e.g. 4 months from now (i.e. not when we tell you what to do).
+**Before you continue, I would like you to use a some minutes to look at the documentation** and reflect on how you could get started if you want to assemble a genome or a metagenome in e.g. 4 months from now (i.e. when we are not here to tell you what to do).
 
 I will now give you two choices:
 
-1) **Build your own slurm script** based on the documentation you just read, and the previouse sessions with Arturo. Think: what kind of data do I have? what kind of information would I want in my outputs? What parameters i are reccomended (metagenome, ONT, slightly shallow sequencing coverage) 
+1) **Build your own bash job script** based on the documentation you just read, and the previouse sessions with Arturo. Think: What kind of data do I have? What kind of information would I want in my outputs? What parameters i are reccomended (metagenome, ONT, slightly shallow sequencing coverage etc.)?
 
 2) Jump to the section below, **Assembly using pre-made bash script as template**
 
@@ -117,14 +117,16 @@ If you feel confident in what we have done until now, I would strongly andvise y
 If this course is the first time you are working with HPC and slurm files, and everything is greek, option 2 is completely OK. 
 
 
-
 ### Assembly using pre-made bash script as template
 
-You can either 
-1) copy and paste this **script into a new text file** (as described under **How to make a job script that you submit using `sbatch`**), or 
-2) copy the metagenome_canu.SLURM.sh file from /mnt/SCRATCH/bio326-21/MetaGenomeAssembly to your metaCANU.Assembly.dir folder
+Make your way to your MetaGenomeAssemblyBio326 directory. Now, you can either;
+
+A) Copy and paste the **script below into a new text file** (as described under **How to make a job script that you submit using `sbatch`**), or 
+B) Copy the metagenome_canu.SLURM.sh file from /mnt/SCRATCH/bio326-21/MetaGenomeAssembly to your MetaGenomeAssemblyBio326 directory
 
 In both cases: **REMEMBER TO CHANGE THE PATHS** and give your job a name. Again, you can edit the metagenome_canu.SLURM.sh file using `vi`, `vim`, `nano` or your favorite text editor.
+
+_Option A_ : 
 
 ```
 #!/bin/bash
@@ -153,11 +155,13 @@ canu -p XDC-ONT -d $outpath/ corOutCoverage=10000 corMinCoverage=0 corMhapSensit
 module unload
 
 ```
-or 
+or, _Option B_
 
 ```
 cp  /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/metagenome_canu.SLURM.sh .
 ```
+
+## SUBMIT YOUR JOB FILE
 
 Start your job: 
 ```
