@@ -12,7 +12,7 @@ Well, interactive jobs are good to test your system and check or troubleshoot yo
 
 ## How to make a job script that you submit using `sbatch`
 
-To make a job script, you first have to generate a myjob.sh file. This can be done via `vi`, `vim` or `nano`. E.g. 
+To make a job script, you first have to generate a **myjob.sh** file. This can be done via `vi`, `vim` or `nano`. E.g. 
 
 ```
 vi myjob.sh
