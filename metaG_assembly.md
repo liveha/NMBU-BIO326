@@ -14,7 +14,7 @@ Well, interactive jobs are good to test your system and check or troubleshoot yo
 
 ## How to make a job script that you submit using `sbatch`
 
-To make a job script, you first have to generate a **myjob.sh** file. This can be done via `vi`, `vim` or `nano`. If you are new to text editors, this page might be helpfull https://www.linux.com/topic/desktop/introduction-text-editors-get-know-nano-and-vim/  (NB: my favorite is `vi`, but nano is considered to be more intuitive) 
+To make a job script, you first have to generate a **myjob.sh** file. This can be done via `vi`, `vim` or `nano`. If you are new to text editors, this page might be helpfull https://www.linux.com/topic/desktop/introduction-text-editors-get-know-nano-and-vim/  (NB: my favorite is `vi`, but `nano` is considered to be more intuitive) 
 
 ```
 vi myjob.sh
@@ -49,7 +49,7 @@ bwa mem -t $SLURM_TASKS_PER_NODE genome.fa reads.fastq | samtools sort -o output
 echo "This is my example script. Hello world!"
 ```
 
-Once created, you will have to save your script and sumbit the job via ´sbatch myjob.sh`
+Once created, you will have to save your script and sumbit the job via `sbatch myjob.sh`
 
 You will generate your own assembly script in the **Assembly** section. 
 
