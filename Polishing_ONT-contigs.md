@@ -1,7 +1,6 @@
 # POLISHING AND EVALUATING ONT CONTIGS
 
 Today we will polish the contigs from the metagenome assembly using short-read sequences form Illumina HiSeq sequencing of the same sample. 
-_If we have time, we migth also start a binning job._
 
 
 ## But first, recap on how to submit a job via `sbatch`
@@ -71,7 +70,6 @@ sbatch myjob.sh
 ```
 
 Remember that you can always:
-
 Check where you are (pathway directory) by typing `pwd` 
 List content in your directory by typing `ls` and `ls -l`
 Change your directory using `cd` , e.g. `cd /path/to/where/I/wanna/go/`
@@ -85,7 +83,7 @@ Today, we will contine with the contigs from the assembly on Wednsday. If you su
 
 First have a look on your jobs in queue: 
 ```
-squeue -u username
+squeue -u youruserID
 ```
 
 If you have a job there, see if it is running (ST = R) or if it still pending in queue (ST = PD). This is how mine looked like: 
@@ -107,7 +105,7 @@ Orion will also generate a slurm-log file, e.g. `slurm-12943611.out` where the n
 _Orion is packed, so there is a high chance that your job is still pending. However, we have 99 reasons problems, but contigs aint one_: You will find a backup of the contigs  here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir`. Copy these to your folder: 
 
 ```
-cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/XDC-ONT.contigs.fasta
+cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/XDC-ONT.contigs.fasta .
 ``` 
 
 First thing we will do, is to check how many contigs we have (`-c` stands for count): 
@@ -127,30 +125,204 @@ This should look something like:
 
 Yey! Look at the size, do you think all of them are actual chromosomal genomes? 
 
-We also wanna do is the check the quality using **BUSCO**. You could run BUSCO interactivly as you did before... but for the training, I will encurage you to run BUSCO as a bash job script, like this: 
+We also wanna do is the check the quality using **BUSCO** again. We already know that BUSCO is available as a container in Orion 
 
-Remember, **CHANGE PATHS AND JOB ID**:
+`singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco --help`
+
+We will run BUSCO using the script you used in the genome session, which can be found here: `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly`, called `busco.SLURM.sh` **but with a few minor changes - can you spot them?* 
 
 ```
+#!/bin/bash
+
+## Job name:
+#SBATCH --job-name=BUSCOmetagenome
+#
+## Wall time limit:
+#SBATCH --time=02:00:00
+#
+## Other parameters:
+#SBATCH --cpus-per-task 10
+#SBATCH --mem=10G
+#SBATCH --nodes 1
+#SBATCH --partition=smallmem
+
+## Set up job environment:
+
+module --quiet purge  # Reset the modules to the system default
+
+####Do some work:########
+
+## For debuggin it is useful to print some info about the node,CPUs requested and when the job starts...
+echo "Hello" $USER
+echo "my submit directory is:"
+echo $SLURM_SUBMIT_DIR
+echo "this is the job:"
+echo $SLURM_JOB_ID
+echo "I am running on:"
+echo $SLURM_NODELIST
+echo "I am running with:"
+echo $SLURM_CPUS_ON_NODE "cpus"
+echo "Today is:"
+date
+
+## Copying data to local node for faster computation
+
+cd $TMPDIR
+
+#Check if $USER exists in $TMPDIR
+
+if [[ -d $USER ]]
+        then
+                echo "$USER exists on $TMPDIR"
+        else
+                mkdir $USER
+fi
+
+echo "copying files to $TMPDIR/$USER/tmpDir_of.$SLURM_JOB_ID"
+
+cd $USER
+mkdir tmpDir_of.$SLURM_JOB_ID
+cd tmpDir_of.$SLURM_JOB_ID
+
+cp $SLURM_SUBMIT_DIR/*.contigs.fasta .
+
+fasta=$(ls -1|grep .contigs.fasta)
+
+####RUNNING BUSCO####
+
+echo "Busco starts at"
+date +%d\ %b\ %T
+
+singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco \
+-i $fasta \
+-o metagenome_pre-polish.busco \
+-m geno \
+--auto-lineage-prok \
+-c $SLURM_CPUS_ON_NODE
+###########Moving results #####################
+
+echo "moving results to" $SLURM_SUBMIT_DIR/
+
+rm *.fasta #Remove fastq files
+rm -r busco_downloads #Remove tmp busco databases downloaded
+
+time cp -r * $SLURM_SUBMIT_DIR/  #Copy all results to the submit directory
+
+####Removing tmp dir#####
+
+cd $TMPDIR/$USER/
+
+rm -r tmpDir_of.$SLURM_JOB_ID
+
+echo "I've done at"
+date
+
 ```
-How does it look? *From the Salmon gut microbe genome, we know we should not expect high quality.*
+
+The bash job script can also be copied to your Assembly directory (same directory as you have your contigs): 
+
+```
+cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/busco.SLURM.sh .
+```
+
+Send the job to Orions queue: 
+
+```
+sbatch busco.SLURM.sh
+```
+*From the Salmon gut microbe genome, we know we should not expect high quality. This will run for a while, so we continue to polishing while we wait for the result*
 
 # Polish
 Lets see if we can improve this with the accurate short reads from an Illumina run!
 
-The Illumina sequneces can be found here in `....`. Please make a directory and copy the Illumina over: 
+The Illumina sequences can be found here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads`, use the `ILLUMINA_TrimmedcatPE.fastq` file! Please make a directory and copy the Illumina over: 
 ```
-mkdir ... 
+mkdir Polishing.dir 
 ```
 ``` 
-cd ....
+cd Polishing.dir
 ```
 ```
-cp ....  
+cp  /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads/ILLUMINA_TrimmedcatPE.fastq .
 ```
 check that you have the reads in your directory by typing `ls`. 
 
 All set? 
 
+The bash job script below will combine two steps/softwares. First `minimap2` will be used to map the Illumina reads to the ONT contig. When that job is done, `Racon` will start polishing. 
+
+You can; Option 1) 
+Make a new .sh file using `vi`, `vim` or `nano`, e.g: 
+```
+vi polishing_canu.SLURM.sh
+```
+and **copy the bash script below into the new text file, as you did for busco above** :   
+
+```
+#!/bin/bash
+
+#SBATCH -N 1
+#SBATCH -J polish
+#SBATCH -n 4
+#SBATCH --mem=100G
+#SBATCH --partition=hugemem
+
+module load Miniconda3
+source activate /mnt/SCRATCH/bio326-21/GenomeAssembly/condaenvironments/ONPTools/
+module load minimap2
+
+#REMEMBER TO CHANGE PATHS
+Illumina_path='/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads' #KEEP
+contig_path='/mnt/SCRATCH/PATH/TO/YOUR/CONTIGS'  #CHANGE
+mapping_path='/mnt/SCRATCH/PATH/TO/YOUR/CONTIGS' #CHANGE, same as above
+out_path='/mnt/SCRATCH/PATH/TO/YOUR/Polishing.dir' #CHANGE
+
+
+#map the short reads (-ax sr) to contig file and generate .sam
+minimap2 -ax sr $contig_path/XDC-ONT.contigs.fasta $Illumina_path/ILLUMINA_TrimmedcatPE.fastq > $mapping_path/SR_to_ONT-contig.sam
+
+
+#polish ONT contig with short reads from Illumina, using racon
+racon --threads 4 --include-unpolished $Illumina_path/ILLUMINA_TrimmedcatPE.fastq $mapping_path/SR_to_ONT-contig.sam $contig_path/XDC-ONT.contigs.fasta > $out_path/polished_ONT-contigs.fasta
+
+conda deactivate
+module unload
 ```
 
+Or you can 
+2) copy the bash file calles `polishing_canu.SLURM.sh` from /mnt/SCRATCH/bio326-21/MetaGenomeAssembly to your directory (you should be in a directory called `Polishing.dir`now. No panic if you are not, just keep track on your paths!: 
+
+```
+cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/polishing_canu.SLURM.sh .
+```
+
+**REMEMBER TO CHANGE THE PATHS AND THE JOB NAME IN BOTH CASES**
+
+Ready? 
+```
+sbatch polishing_canu.SLURM.sh
+```
+This job takes around ~10-15 min to finish. Monitor the job using `squeue -u youruserID`
+
+When polishing job is finished, we will evaluate the quality of the polished contigs using **BUSCO**, again.
+For this, **will use the same BUSCO bash script as above**. First we copy this to our polishing directory: 
+
+```
+cp /mnt/SCRATCH/bio326-21-0/MetaGenomeAssemblyBio326/MetaG_Assembly.dir/busco.SLURM.sh ./ 
+```
+
+**BUT you will have to change some stuff first..** HINT: When you started the first BUSCO job today, I asked you if you could spot a difference. Could you?   
+
+```
+nano busco.SLURM.sh 
+```
+
+When changes are made, we can start the job: 
+```
+sbatch busco.SLURM.sh
+```
+This will take a little while again.. Perfect time for a short break.
+
+When the job is done: Did the quality of the contigs improved after polishing with short reads? 
+
+The end, happy Friyey!
