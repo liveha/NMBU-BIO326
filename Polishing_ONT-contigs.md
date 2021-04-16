@@ -125,11 +125,11 @@ This should look something like:
 
 Yey! Look at the size, do you think all of them are actual chromosomal genomes? 
 
-We also wanna do is the check the quality using **BUSCO** again. We already know that BUSCO is available as a container in Orion 
+We also wanna check the quality using **BUSCO** again. We already know that BUSCO is available as a container in Orion 
 
 `singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco --help`
 
-We will run BUSCO using the script you used in the genome session, which can be found here: `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly`, called `busco.SLURM.sh` **but with a few minor changes - can you spot them?* 
+We will run BUSCO using the script you used in the genome session, which now can be found here: `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly`, called `busco.SLURM.sh` **but with a few minor changes - can you spot them?* 
 
 ```
 #!/bin/bash
@@ -230,22 +230,22 @@ Send the job to Orions queue:
 ```
 sbatch busco.SLURM.sh
 ```
-*From the Salmon gut microbe genome, we know we should not expect high quality. This will run for a while, so we continue to polishing while we wait for the result*
+*From the Salmon gut microbe genome, we know we should not expect high quality. 
+
+NB: This will run for a while, so we continue to polishing while we wait for the result*
 
 # Polish
 Lets see if we can improve this with the accurate short reads from an Illumina run!
 
-The Illumina sequences can be found here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads`, use the `ILLUMINA_TrimmedcatPE.fastq` file! Please make a directory and copy the Illumina over: 
+First we make a folder for the polishing: 
 ```
 mkdir Polishing.dir 
 ```
 ``` 
 cd Polishing.dir
 ```
-```
-cp  /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads/ILLUMINA_TrimmedcatPE.fastq .
-```
-check that you have the reads in your directory by typing `ls`. 
+
+The Illumina sequences can be found here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads`, use the `ILLUMINA_TrimmedcatPE.fastq` file! You do not need to copy these over, just use the PATH in the bash job script. (I hope this works. If it doesnt, please copy the Illumina reads over to your Polishing.dir using `cp  /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads/ILLUMINA_TrimmedcatPE.fastq .`
 
 All set? 
 
@@ -272,7 +272,7 @@ source activate /mnt/SCRATCH/bio326-21/GenomeAssembly/condaenvironments/ONPTools
 module load minimap2
 
 #REMEMBER TO CHANGE PATHS
-Illumina_path='/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads' #KEEP
+Illumina_path='/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/Illumina_rawReads' #ONLY CHANGE IF YOU COPIED THE FILE OVER TO YOUR DIR
 contig_path='/mnt/SCRATCH/PATH/TO/YOUR/CONTIGS'  #CHANGE
 mapping_path='/mnt/SCRATCH/PATH/TO/YOUR/CONTIGS' #CHANGE, same as above
 out_path='/mnt/SCRATCH/PATH/TO/YOUR/Polishing.dir' #CHANGE
