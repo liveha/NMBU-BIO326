@@ -58,7 +58,7 @@ racon [options ...] <sequences> <overlaps> <target sequences>
 
 ```
 
-NB: We have simplified it in this session, and made templates that you can copy from directory or that you can copy paste from this document and into the txt file. The only thing you will need to change when we create the job script for polishing (below) and evaluation is: 
+NB: We have simplified it in this session, and made templates that you can copy to your directory, or that you can copy paste from this document and into the txt file. The only thing you will need to change when we create the job script for **polishing** is: 
 1)  --job-name
 2)  #Paths
 
