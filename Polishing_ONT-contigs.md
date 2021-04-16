@@ -323,6 +323,7 @@ sbatch busco.SLURM.sh
 ```
 This will take a little while again.. Perfect time for a short break.
 
-When the job is done: Did the quality of the contigs improved after polishing with short reads? 
+_When the job is done_: **Did the quality of the contigs improved after polishing with short reads?** 
+
 
 The end, happy Friyey!
