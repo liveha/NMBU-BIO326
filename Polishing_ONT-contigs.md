@@ -420,17 +420,22 @@ cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/busco.SLURM_2.sh .
 ```
 sbatch busco.SLURM.sh
 ```
-This will take a little while again.. Perfect time for a short break.
+This will take a couple of minutes...
 
 _When the job is done_: **Did the quality of the contigs improved after polishing with short reads?** 
 
+_Lets compare!_
 
-The busco results **BEFORE** polising looked something like this: 
+The busco results **BEFORE** polishing looked something like this:
+ 
 ![image](https://user-images.githubusercontent.com/65181082/115439196-97813000-a20e-11eb-8320-ba11adfabaaf.png)
 
 
-The busco results **AFTER** polising looked something like this: 
+The busco results **AFTER** polising looked something like this:
+
 ![image](https://user-images.githubusercontent.com/65181082/115435900-9f3ed580-a20a-11eb-8041-280397183c11.png)
 
+
+Seems like polishing worked great, ONT + ILLUMINA = GREAT DATA
 
 The end, happy Friyey!
