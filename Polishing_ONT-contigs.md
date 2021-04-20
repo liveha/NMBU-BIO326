@@ -304,26 +304,133 @@ sbatch polishing_canu.SLURM.sh
 ```
 This job takes around ~10-15 min to finish. Monitor the job using `squeue -u youruserID`
 
+*UPDTATED*
+**Evaluating polishing**
+
 When polishing job is finished, we will evaluate the quality of the polished contigs using **BUSCO**, again.
-For this, **will use the same BUSCO bash script as above**. First we copy this to our polishing directory: 
+For this, **will use the same BUSCO bash script as above**, but with some changes: 
 
 ```
-cp /mnt/SCRATCH/bio326-21-0/MetaGenomeAssemblyBio326/MetaG_Assembly.dir/busco.SLURM.sh ./ 
+#!/bin/bash
+
+## Job name:
+#SBATCH --job-name=BUSCOmetagenome
+#
+## Wall time limit:
+#SBATCH --time=02:00:00
+#
+## Other parameters:
+#SBATCH --cpus-per-task 10
+#SBATCH --mem=50G
+#SBATCH --nodes 1
+#SBATCH --partition=smallmem
+
+## Set up job environment:
+
+module --quiet purge  # Reset the modules to the system default
+
+####Do some work:########
+
+## For debuggin it is useful to print some info about the node,CPUs requested and when the job starts...
+echo "Hello" $USER
+echo "my submit directory is:"
+echo $SLURM_SUBMIT_DIR
+echo "this is the job:"
+echo $SLURM_JOB_ID
+echo "I am running on:"
+echo $SLURM_NODELIST
+echo "I am running with:"
+echo $SLURM_CPUS_ON_NODE "cpus"
+echo "Today is:"
+date
+
+## Copying data to local node for faster computation
+
+cd $TMPDIR
+
+#Check if $USER exists in $TMPDIR
+
+if [[ -d $USER ]]
+        then
+                echo "$USER exists on $TMPDIR"
+        else
+                mkdir $USER
+fi
+
+echo "copying files to $TMPDIR/$USER/tmpDir_of.$SLURM_JOB_ID"
+
+cd $USER
+mkdir tmpDir_of.$SLURM_JOB_ID
+cd tmpDir_of.$SLURM_JOB_ID
+
+cp $SLURM_SUBMIT_DIR/*contigs.fasta .
+
+fasta=$(ls -1|grep contigs.fasta)
+
+####RUNNING BUSCO####
+
+echo "Busco starts at"
+date +%d\ %b\ %T
+
+singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco \
+-i $fasta \
+-o metagenome_post-polish.busco \
+-m geno \
+-l bacteria_odb10 \
+-c $SLURM_CPUS_ON_NODE
+
+####RUNNING BUSCO####
+
+echo "Busco starts at"
+date +%d\ %b\ %T
+
+singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco \
+-i $fasta \
+-o metagenome_post-polish.busco \
+-m geno \
+-l bacteria_odb10 \
+-c $SLURM_CPUS_ON_NODE
+
+###########Moving results #####################
+
+echo "moving results to" $SLURM_SUBMIT_DIR/
+
+rm *.fasta #Remove fastq files
+rm -r busco_downloads #Remove tmp busco databases downloaded
+
+time cp -r * $SLURM_SUBMIT_DIR/  #Copy all results to the submit directory
+
+####Removing tmp dir#####
+
+cd $TMPDIR/$USER/
+
+rm -r tmpDir_of.$SLURM_JOB_ID
+
+echo "I've done at"
+date
+
 ```
 
-**BUT you will have to change some stuff first..** HINT: When you started the first BUSCO job today, I asked you if you could spot a difference. Could you?   
-
 ```
-nano busco.SLURM.sh 
+cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/busco.SLURM_2.sh . 
 ```
 
-When changes are made, we can start the job: 
+**I have done some modifications to this job, can you see what?** 
+
 ```
 sbatch busco.SLURM.sh
 ```
 This will take a little while again.. Perfect time for a short break.
 
 _When the job is done_: **Did the quality of the contigs improved after polishing with short reads?** 
+
+
+The busco results **BEFORE** polising looked something like this: 
+![image](https://user-images.githubusercontent.com/65181082/115439196-97813000-a20e-11eb-8320-ba11adfabaaf.png)
+
+
+The busco results **AFTER** polising looked something like this: 
+![image](https://user-images.githubusercontent.com/65181082/115435900-9f3ed580-a20a-11eb-8041-280397183c11.png)
 
 
 The end, happy Friyey!
