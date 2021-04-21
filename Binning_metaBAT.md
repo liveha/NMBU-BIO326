@@ -79,7 +79,7 @@ cp /mnt/SCRATCH/bio326-21/MetaGenomeBinning/binning.SLURM.sh .
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/polished_ONT-contigs.fasta ./
 ``` 
 
-Sent the job to the queue: 
+Send the job to the queue: 
 
 ```
 sbatch binning.SLURM.sh
@@ -95,7 +95,7 @@ When the binning job is done, you should see something like this in your `Binnin
 
 
 _How many bins did you get?__
-Do you recognize something here? Look at the size, have you seen earlier in the this data lab?_
+Look at the geenome size `ls -l`, have you seen similar contig sizes earlier in the this data lab?_
 
 Spend some time exploring the MAGs; 
 * How many contigs are in the MAGs? And can this tell us?
@@ -121,6 +121,8 @@ _This is what I meant with "be critical" during the presentation last week. Binn
 To check the quality of the generated bins/MAGs, we will use CheckM: https://github.com/Ecogenomics/CheckM/wiki
 
 ![image](https://user-images.githubusercontent.com/65181082/115446311-50e40380-a217-11eb-93e7-9b8befabc672.png)
+
+
 
 Modify and start the bash job script **in the same manner as before**
 
@@ -176,7 +178,7 @@ We will start this job slightly different that the previous sessions, but the pr
 
 EXAMPLE: 
 ```
-sbatch gtdbk.classifywf.SLURM.sh path_to_MAGs fasta_files_extension
+sbatch gtdbk.classifywf.SLURM.sh PATH/TO/MAGs fasta_files_extension
 ```
 First you will need to make a new directory for this: 
 
@@ -184,7 +186,7 @@ First you will need to make a new directory for this:
 mkdir Taxonomy
 ```
 
-Then copy the `gtdbk.classifywf.SLURM.sh` to your /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/
+Then copy the `gtdbk.classifywf.SLURM.sh` to your /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/Taxonomy
 
 ```
 cd /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/Taxonomy
