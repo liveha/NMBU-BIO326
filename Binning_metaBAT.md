@@ -95,7 +95,7 @@ When the binning job is done, you should see something like this in your `Binnin
 
 
 _How many bins did you get?__
-Look at the file size of the bins using `ls -l` (NB: we will look at genome size in the checkM results), have you seen similar contig sizes earlier in the this data lab?_
+Look at the file size of the bins using `ls -l` (rough estimate to have an idea of the genome size. We will look at the actual genome size in the checkM results below), have you seen similar contig sizes earlier in the this data lab?_
 
 Spend some time exploring the MAGs; 
 * How many contigs are in each MAGs? And what can this tell us?
