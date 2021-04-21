@@ -58,9 +58,9 @@ In this directory, you will also generate your bash job script. I have made a te
 
 
 #REMEMBER TO CHANGE THE PATHS   
-contig_path='/mnt/SCRATCH/bio326-21-0/MetaGenomeAssemblyBio326/MetaG_Assembly.dir/Polished.dir '         #CHANGE
-mapping_path='/mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326'         #CHANGE
-out_path='/mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/Binning.dir' #CHANGE
+contig_path='/PATH/TO/POLISHED/CONTIGS'        #CHANGE
+mapping_path='/PATH/TO/DEPTH/FILE'              #CHANGE
+out_path='/PATH/TO/YOUR/OUTPUT/DIR'             #CHANGE
 
 singularity exec /cvmfs/singularity.galaxyproject.org/m/e/metabat2:2.15--h986a166_1 metabat2 -i $contig_path/polished_ONT-contigs.fasta -a $mapping_path/depth.txt -o $out_path/ONT_bin
 
@@ -122,40 +122,48 @@ To check the quality of the generated bins/MAGs, we will use CheckM: https://git
 
 ![image](https://user-images.githubusercontent.com/65181082/115446311-50e40380-a217-11eb-93e7-9b8befabc672.png)
 
+Modify and start the bash job script **in the same manner as before**
+
+```
+#!/bin/bash
+
+#SBATCH -N 1
+#SBATCH -J checkM
+#SBATCH -n 2
+#SBATCH --mem=10G
+#SBATCH --partition=smallmem
 
 
+#REMEMBER TO CHANGE THE PATHS   
+bin_path='/PATH/TO/YOUR/BINS' #CHANGE
+out_path='/mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/Binning.dir/checkM'  #ONLY CHANGE USER ID; job will generater the checkM dir!
+
+singularity exec /cvmfs/singularity.galaxyproject.org/c/h/checkm-genome:1.1.3--py_1 checkm lineage_wf -x fa $bin_path/ $out_path/
+
+singularity exec /cvmfs/singularity.galaxyproject.org/c/h/checkm-genome:1.1.3--py_1 checkm qa $out_path/lineage.ms $out_path -o 2 > $out_path/ONT_qa_bins
 
 ```
 
-```
-or 
-
-```
-```
 or you can copy the bash job file from here: 
 
 ```
-cp /mnt/SCRATCH/bio326-21/MetaGenomeBinning/binning.SLURM.sh .
+cp /mnt/SCRATCH/bio326-21/MetaGenomeBinning/checkM.SLURM.sh .
 ```
 
-**REMEMBER, YOU HAVE TO CHANGE YOUR PATHS IN BOTH CASES** and the assembly path is where you have the **polished contigs** from last session! Dont have the polished contigs? No worries, you can pick them up here: 
-``` 
-cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/polished_ONT-contigs.fasta ./
-``` 
+**REMEMBER, YOU HAVE TO CHANGE YOUR PATHS IN BOTH CASES** 
+
 
 Sent the job to the queue: 
 
 ```
 sbatch checkM.SLURM.sh
 ```
-and monitor the job using `squeue -u youruserID`. **NB: This job will take some minutes to finish!** While you are waiting, head down to **TAXONOMIC CLASSIFICATION**
+and monitor the job using `squeue -u youruserID`. **NB: This job will take some time to finish!** While you are waiting, head down to **TAXONOMIC CLASSIFICATION**
 
-This will generate a directory called `checkm` in the Binning.dir path.
-
-Make your way to this directory, and look at the `...`output. 
+_When done:_ This job will generate a directory called `checkM` in the Binning.dir path. Make your way to this directory, and look at the `ONT_qa_bins` output. 
 
 ```
-less -S ...
+less -S ONT_qa_bins
 ```
 How does it look? Are the MAGs of OK quality?
 
@@ -170,16 +178,22 @@ EXAMPLE:
 ```
 sbatch gtdbk.classifywf.SLURM.sh path_to_MAGs fasta_files_extension
 ```
-First you will need to copy the `gtdbk.classifywf.SLURM.sh` to your /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/
+First you will need to make a new directory for this: 
 
 ```
-cd /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/
+mkdir Taxonomy
+```
+
+Then copy the `gtdbk.classifywf.SLURM.sh` to your /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/
+
+```
+cd /mnt/SCRATCH/bio326-21-0/MetaGenomeBinningBio326/Taxonomy
 ```
 
 ```
 cp /mnt/SCRATCH/bio326-21/MetaGenomeBinning/gtdbk.classifywf.SLURM.sh ./
 ```
-_you do **NOT** have to change the `.sh` script now, run like example above:
+_you do **NOT** have to change the `.sh` script now, run like example above_
 ```
 sbatch gtdbk.classifywf.SLURM.sh /PATH/TO/YOUR/MAGs fa
 ```
@@ -189,6 +203,11 @@ _Is it running?_
 GTDBtk may run for some hours, so we will just let it run until next session (Friday) 
 
 **ON FRIDAY YOU WILL DO FUNCTIONAL ANNOTATION OF THE MAGS USING DRAM, AND YOU WILL NEED THE OUTPUT FROM CHECKM AND GTDBTK!**
+
+DRAM: https://github.com/shafferm/DRAM
+
+
+Thank you for today, we got MAGs yey!
 
 
 
