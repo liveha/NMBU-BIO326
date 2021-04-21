@@ -95,10 +95,10 @@ When the binning job is done, you should see something like this in your `Binnin
 
 
 _How many bins did you get?__
-Look at the geenome size `ls -l`, have you seen similar contig sizes earlier in the this data lab?_
+Look at the file size of the bins using `ls -l` (NB: we will look at genome size in the checkM results), have you seen similar contig sizes earlier in the this data lab?_
 
 Spend some time exploring the MAGs; 
-* How many contigs are in the MAGs? And can this tell us?
+* How many contigs are in each MAGs? And what can this tell us?
 * Where did the circular contigs go? 
 
 _We lost the circular information in the header during the polishing step, but this is how ot looked like:_
