@@ -131,9 +131,9 @@ Modify and start the bash job script **in the same manner as before**
 
 #SBATCH -N 1
 #SBATCH -J checkM
-#SBATCH -n 2
-#SBATCH --mem=10G
-#SBATCH --partition=smallmem
+#SBATCH -n 8
+#SBATCH --mem=140G
+#SBATCH --partition=hugemem
 
 
 #REMEMBER TO CHANGE THE PATHS   
@@ -155,7 +155,7 @@ cp /mnt/SCRATCH/bio326-21/MetaGenomeBinning/checkM.SLURM.sh .
 **REMEMBER, YOU HAVE TO CHANGE YOUR PATHS IN BOTH CASES** 
 
 
-Sent the job to the queue: 
+Send the job to the queue: 
 
 ```
 sbatch checkM.SLURM.sh
@@ -167,6 +167,11 @@ _When done:_ This job will generate a directory called `checkM` in the Binning.d
 ```
 less -S ONT_qa_bins
 ```
+_should look something like this:_
+
+![image](https://user-images.githubusercontent.com/65181082/115537172-d65cc780-a29a-11eb-9fc7-1238611cdda1.png)
+
+
 How does it look? Are the MAGs of OK quality?
 
 
