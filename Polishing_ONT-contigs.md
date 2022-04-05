@@ -108,7 +108,7 @@ _Orion is packed, so there is a high chance that your job is still pending. Howe
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/XDC-ONT.contigs.fasta .
 ``` 
 
-First thing we will do, is to check how many contigs we have (`-c` stands for count): 
+We could do several things to check the quality of our assembly, and if your assembly finished successfully you will also find a report file in your output directory. But for now, we will only look at some basics: First thing we will do, is to check how many contigs we have (`-c` stands for count): 
 
 ```
 grep -c "^>" XDC-ONT.contigs.fasta
