@@ -30,7 +30,7 @@ To consider: The contigs are polished using Illumina data. Will the ONT raw read
 _Can we use the mapping file we generated (using minimap2) in the polishing step?_ 
 To consider: At that time, we mapped the Illumina raw reads back to _unpolished contigs_...
 
-We need to make a new mapping file and generate depth file from that, **but the mapping is a time consumings step, so we have done this for you before todays session**
+The conclusion is that we need to make a new mapping file and generate depth file from that, **but the mapping is a time consumings step, so we have done this for you before todays session**
 You can find the **depth file** in `/mnt/SCRATCH/bio326-21/MetaGenomeBinning/`. Copy this to your `MetaGenomeBinningBio326`. 
 
 Make your way to this directory using `cd MetaGenomeBinningBio326` and
