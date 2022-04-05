@@ -102,7 +102,7 @@ This folder should look something like this:
 
 Orion will also generate a slurm-log file, e.g. `slurm-12943611.out` where the number corresponds to the jobID. Depending on the software, this file can provide details regarding the program, the run or errors. Check using e.g. `more slurm-12943611.out`
 
-_Orion is packed, so there is a high chance that your job is still pending. However, we have 99 reasons problems, but contigs aint one_: You will find a backup of the contigs  here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir`. Copy these to your folder: 
+_Orion can be rather busy, so there is a high chance that your job is still pending. However, we have 99 reasons problems, but contigs aint one_: You will find a backup of the contigs  here `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir`. Copy these to your folder: 
 
 ```
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/MetaG_Assembly.dir/XDC-ONT.contigs.fasta .
@@ -114,7 +114,7 @@ We could do several things to check the quality of our assembly, and if your ass
 grep -c "^>" XDC-ONT.contigs.fasta
 ```
 
-Lets check how many of these that are circular! From the previous genome assembly, we know that Canu will flag contigs that might be circular **suggestCircular=yes**, so we are looking for this pattern: 
+Lets check if we have any circular contigs! Canu will flag contigs that might be circular **suggestCircular=yes**, so we are looking for this pattern: 
 
 ```
 grep -i "suggestCircular=yes" XDC-ONT.contigs.fasta
@@ -125,11 +125,11 @@ This should look something like:
 
 Yey! Look at the size, do you think all of them are actual chromosomal genomes? 
 
-We also wanna check the quality using **BUSCO** again. We already know that BUSCO is available as a container in Orion 
+However, we already know that ONT data alone has a high error rate. From the genome assembly session, we know that this can be seen with e.g. BUSCO. BUSCO is made for genomes, and not metagonomes which will contain several genomes (and therefor also several sets of single-copy orthologes). However, it will still give us an indication... So in lack of a better option for metagenomes, we will use **BUSCO** again, to check the quality before and after we polish. We already know that BUSCO is available as a container in Orion 
 
 `singularity exec /cvmfs/singularity.galaxyproject.org/b/u/busco\:5.0.0--py_1 busco --help`
 
-We will run BUSCO using the script you used in the genome session, which now can be found here: `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly`, called `busco.SLURM.sh` **but with a few minor changes - can you spot them?* 
+We will run BUSCO using the script you used in the genome session, which now can be found here: `/mnt/SCRATCH/bio326-21/MetaGenomeAssembly`, called `busco.SLURM.sh` 
 
 ```
 #!/bin/bash
@@ -415,14 +415,13 @@ date
 cp /mnt/SCRATCH/bio326-21/MetaGenomeAssembly/busco.SLURM_2.sh . 
 ```
 
-**I have done some modifications to this job, can you see what?** 
 
 ```
 sbatch busco.SLURM.sh
 ```
 This will take a couple of minutes...
 
-_When the job is done_: **Did the quality of the contigs improved after polishing with short reads?** 
+_When the job is done_: **Has the quality of the metagenome improved after polishing with short reads?** 
 
 _Lets compare!_
 
@@ -436,6 +435,8 @@ The busco results **AFTER** polising looked something like this:
 ![image](https://user-images.githubusercontent.com/65181082/115435900-9f3ed580-a20a-11eb-8041-280397183c11.png)
 
 
-Seems like polishing worked great, ONT + ILLUMINA = GREAT DATA
+Again, BUSCO should only be consideres as a very brief proxy for metagenome quality (see reason above). Nevertheless, this gives us a indication that the polishing with Illumina data improved the quality, ONT + ILLUMINA = GREAT DATA
 
-The end, happy Friyey!
+Next: Binning!!
+
+Continue to https://github.com/liveha/NMBU-BIO326/blob/main/Binning_metaBAT.md
